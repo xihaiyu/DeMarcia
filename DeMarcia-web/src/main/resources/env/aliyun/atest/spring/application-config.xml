@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <bean id="springBeanFactory" class="com.ctrip.asp.commom.spring.SpringBeanFactory"/>
+
+    <!-- 切面扫描强制使用CGLIB代理 -->
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
+
+    <!-- 配置文件导入 -->
+    <context:property-placeholder location="classpath*:config.properties" ignore-unresolvable="true"
+                                  ignore-resource-not-found="true" file-encoding="UTF-8"/>
+
+
+
+    <!-- 引入数据库访问文件 -->
+    <import resource="spring-mybaits.xml"/>
+
+
+
+    <bean name="orderIdGenerator" class="com.qunar.corp.oig.client.OrderIdGenerator">
+        <constructor-arg name="env" value="${order.id.generator.env}"/>
+        <constructor-arg name="sysSign" value="ASP"/>
+        <constructor-arg name="syscode" value="17"/>
+        <constructor-arg name="suffixLength" value="2"/>
+    </bean>
+    <!-- config jackson 不输出Null数据 -->
+    <bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+        <property name="converters">
+            <set>
+                <bean class="com.quhuhu.wehotel.membership.web.converter.StringToMoneyConverter"/>
+            </set>
+        </property>
+    </bean>
+
+    <mvc:annotation-driven conversion-service="conversionService">
+        <mvc:message-converters register-defaults="true">
+            <bean
+                    class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+                <property name="objectMapper">
+                    <bean class="com.fasterxml.jackson.databind.ObjectMapper">
+                        <property name="serializationInclusion">
+                            <value type="com.fasterxml.jackson.annotation.JsonInclude.Include">NON_NULL</value>
+                        </property>
+                    </bean>
+                </property>
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+    <context:component-scan base-package="com.quhuhu"/>
+
+    <!-- file upload config (max upload size 20M) -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="maxUploadSize" value="20971520"/>
+        <property name="maxInMemorySize" value="1024"/>
+    </bean>
+</beans>

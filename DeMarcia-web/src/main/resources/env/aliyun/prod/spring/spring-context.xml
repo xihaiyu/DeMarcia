@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="
+	   	http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <import resource="classpath*:dubbo/dubbo-provider.xml"/>
+
+    <!-- enable component scanning (beware that this does not enable mapper scanning!) -->
+    <context:component-scan base-package="com.ctrip.ssp.staticdata.service,com.ctrip.ssp.staticinfo.biz,com.ctrip.ssp.staticinfo.api,com.ctrip.ssp.data.compare,
+                                                com.ctrip.ssp.biz,com.ctrip.ssp.data.warpper.staticinfo"/>
+
+    <import resource="classpath*:spring/spring-mybaits.xml"/>
+
+</beans>

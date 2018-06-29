@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="DeMarcia-web:war">
+    <output-path>$PROJECT_DIR$/DeMarcia-web/target</output-path>
+    <root id="archive" name="DeMarcia-web.war">
+      <element id="artifact" artifact-name="DeMarcia-web:war exploded" />
+    </root>
+  </artifact>
+</component>
